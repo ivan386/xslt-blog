@@ -25,12 +25,12 @@
 			}
 		</style>
 		<script><![CDATA[
-				function save_xml(){
+			function save_xml(){
 				var title = document.querySelector(".заголовок input").value
 				var text = document.querySelector(".текст textarea").value
-				var link = document.querySelector(".текст a[onclick='save_xml()']")
-				link.setAttribute("download", title + ".xml")
-				link.setAttribute(
+				var link_save = document.querySelector(".текст a[onclick='save_xml()']")
+				link_save.setAttribute("download", title + ".xml")
+				link_save.setAttribute(
 					"href"
 					,   'data: text/xml,' 
 					  + encodeURI(
@@ -43,12 +43,14 @@
 					)
 				)
 				
+				var link_update = document.querySelector(".текст a.update_journal")
+				link_update.setAttribute("href", '')
+				
 				fetch("журнал.xml")
 				.then((rez)=>rez.text())
 				.then(function(text){
 					text = text.replace("<журнал>", `<журнал>\n\t<запись>${title}</запись>`)
-					var link = document.querySelector(".текст a.update_journal")
-					link.setAttribute("href", 'data: text/xml,' + encodeURI(text))
+					link_update.setAttribute("href", 'data: text/xml,' + encodeURI(text))
 				})
 			}
 		]]></script>
