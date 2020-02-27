@@ -29,7 +29,7 @@
 				var title = document.querySelector(".заголовок input").value
 				var text = document.querySelector(".текст textarea").value
 				var link_save = document.querySelector(".текст a[onclick='save_xml()']")
-				link_save.setAttribute("download", title + ".xml")
+				link_save.setAttribute("download", title.replace(/<[^>]*>/gm, "") + ".xml")
 				link_save.setAttribute(
 					"href"
 					,   'data: text/xml,' 
