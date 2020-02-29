@@ -12,16 +12,21 @@
 	-->
 	<xsl:include href="%D0%BD%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%86%D0%B8%D1%8F.xslt" />
 	
+	<!-- текст.xslt -->
+	<xsl:include href="%D1%82%D0%B5%D0%BA%D1%81%D1%82.xslt" />
+	
+	
 	<!-- на выходе у нас будет xHTML а это тот же XML -->
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<!-- сохраняем ссылку на узел с данными  -->
 	<xsl:variable name="запись" select="запись" />
+	<xsl:variable name="xhtml"  select="document('../xhtml/%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D1%8C.xhtml')" />
 	
 	<!-- сразу уходим в документ 'запись.xhtml' -->
 	<xsl:template match="/">
 		<!-- mode не даёт нам зациклиться и напоминает какой документ обрабатывает каждый шаблон -->
-		<xsl:apply-templates mode="xhtml" select="document('../xhtml/%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D1%8C.xhtml')" />
+		<xsl:apply-templates mode="xhtml"  select="$xhtml"/>
 	</xsl:template>
 	
 	<!-- копируем всё для чего нет шаблона ниже -->
@@ -37,7 +42,7 @@
 	<xsl:template mode="xhtml" match="*[contains(@class, 'срез')][normalize-space($запись/текст//срез)]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
-			<xsl:apply-templates mode="xml" select="$запись/текст//срез/node()" />
+			<xsl:apply-templates mode="текст" select="$запись/текст//срез/node()" />
 		</xsl:copy>
 	</xsl:template>
 	
@@ -64,51 +69,10 @@
 	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')][normalize-space($запись/текст)]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
-			<xsl:apply-templates mode="xml" select="$запись/текст/node()" />
+			<xsl:apply-templates mode="текст" select="$запись/текст/node()" />
 		</xsl:copy>
 	</xsl:template>
 	
-	<!-- 
-		теперь нам нужно поправить элементы исходного xml 
-	
-		копируем элементы у которых задано пространство имён
-		(это может быть svg изображение) и атрибуты
-	 -->
-	<xsl:template mode="xml" match="*[namespace-uri()]|@*">
-		<xsl:copy>
-			<xsl:apply-templates mode="xml" select="node()|@*" />
-		</xsl:copy>
-	</xsl:template>
-	
-	<!-- зададим пространсво имеён элементам без него -->
-	<xsl:template mode="xml" match="*">
-		<!--
-			Создаём элемент с тем же именем. У нового элемента 
-			пространство имён уже заданно по умолчанию
-		-->
-		<xsl:element name="{name()}">
-			<xsl:apply-templates mode="xml" select="node()|@*" />
-		</xsl:element>
-	</xsl:template>
-	
-	<!-- оставляем от элемента 'срез' только его содержимое -->
-	<xsl:template mode="xml" match="срез">
-		<xsl:apply-templates mode="xml" select="node()|@*" />
-	</xsl:template>
-	
-	<!-- даём возможность пользователю полноценно использовать xHTML заголовки --> 
-	<xsl:template mode="xml" match="h1|h2|h3|h4|h5">
-		<!-- 
-			h1 у нас уже используется для элемента 'заголовок' 
-			поэтому увеличиваем индекс xHTML заголовков пользователя
-		-->
-		<xsl:element name="h{substring(name(), 2, 1) + 1}">
-			<!-- раз уж мы полезли в заголовки то добавим им id для навигации по записи -->
-			<xsl:attribute name="id">
-				<xsl:value-of select="." />
-			</xsl:attribute>
-			<xsl:apply-templates mode="xml" select="node()|@*" />
-		</xsl:element>
-	</xsl:template>
+
 	
 </xsl:stylesheet>
