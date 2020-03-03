@@ -33,16 +33,18 @@
 
 	<!-- на этом этапе мы видим только содержимое страницы 'запись.xhtml' -->
 	
-	<!-- добавляем содержимое элемента 'срез' если оно есть в элементы с классом 'срез' -->
-	<xsl:template mode="xhtml" match="*[contains(@class, 'срез')][normalize-space($запись/текст//срез)]">
+	<!-- переменные в match работают только в Firefox -->
+	
+	<!-- добавляем содержимое элемента 'срез' в элементы с классом 'срез' -->
+	<xsl:template mode="xhtml" match="*[contains(@class, 'срез')]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates mode="xml" select="$запись/текст//срез/node()" />
 		</xsl:copy>
 	</xsl:template>
 	
-	<!-- добавляем в meta тег содержимое элемента 'срез' если оно есть -->
-	<xsl:template mode="xhtml" match="xhtml:meta[contains(@class, 'срез')][normalize-space($запись/текст//срез)]">
+	<!-- добавляем в meta тег содержимое элемента 'срез' -->
+	<xsl:template mode="xhtml" match="xhtml:meta[contains(@class, 'срез')]">
 		<meta name="description" content="{$запись/текст//срез}" />
 	</xsl:template>
 	
@@ -52,16 +54,16 @@
 		<xsl:call-template name="навигация" />
 	</xsl:template>
 	
-	<!-- добавляем содержимое элемента 'заголовок' если оно есть в элементы с классом 'заголовок' -->
-	<xsl:template mode="xhtml" match="*[contains(@class, 'заголовок')][normalize-space($запись/заголовок)]">
+	<!-- добавляем содержимое элемента 'заголовок' в элементы с классом 'заголовок' -->
+	<xsl:template mode="xhtml" match="*[contains(@class, 'заголовок')]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:value-of select="$запись/заголовок" />
 		</xsl:copy>
 	</xsl:template>
 	
-	<!-- добавляем содержимое элемента 'текст' если оно есть в элементы с классом 'текст' -->
-	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')][normalize-space($запись/текст)]">
+	<!-- добавляем содержимое элемента 'текст' в элементы с классом 'текст' -->
+	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates mode="xml" select="$запись/текст/node()" />
