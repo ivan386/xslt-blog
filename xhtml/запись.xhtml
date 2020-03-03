@@ -19,50 +19,27 @@
 			, .текст h5, .текст h6 {
 				display: inline;
 			}
-
-			.update_journal[href=""]{
-				display: none;
-			}
 		</style>
-		<script><![CDATA[
-			function save_xml(){
-				var title = document.querySelector(".заголовок input").value
-				var text = document.querySelector(".текст textarea").value
-				var link_save = document.querySelector(".текст a[onclick='save_xml()']")
-				link_save.setAttribute("download", title.replace(/<[^>]*>/gm, "") + ".xml")
-				link_save.setAttribute(
-					"href"
-					,   'data: text/xml,' 
-					  + encodeURI(
-`<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="xslt/запись.xslt" type="text/xsl" ?>
-<запись>
-	<заголовок>${title}</заголовок>
-	<текст>${text}</текст>
-</запись>`
-					)
-				)
-				
-				var link_update = document.querySelector(".текст a.update_journal")
-				link_update.setAttribute("href", '')
-				
-				fetch("журнал.xml")
-				.then((rez)=>rez.text())
-				.then(function(text){
-					text = text.replace("<журнал>", `<журнал>\n\t<запись>${title}</запись>`)
-					link_update.setAttribute("href", 'data: text/xml,' + encodeURI(text))
-				})
-			}
-		]]></script>
 	</head>
 	<body>
 		<!-- надеюсь по именам классов понятно что будет в этих элементах -->
 		<ul   class="навигация" />
 		<h1   class="заголовок" ><input id="title" placeholder="Введите заголовок новой записи" style="font: inherit; width: 100%;"/></h1>
-		<span class="текст"><a onclick="save_xml()" oncontextmenu="save_xml()" href="#">сохранить запись</a> <a class="update_journal" href="" download="журнал.xml">обновить журнал</a>
+		<span class="текст" ><label><input accesskey="t" class="тест" type="checkbox" onclick="test_text()" />предпросмотр(t)</label> <a accesskey="s" onclick="save_xml()" oncontextmenu="save_xml()" href="#">сохранить запись</a> <a accesskey="j" class="update_journal" href="" download="журнал.xml">обновить журнал</a> 
 <textarea
 	placeholder="Введите текст новой записи."
 	style="font: inherit; width: 100%; height: 100vh"
-></textarea></span>
+></textarea><span class="тест" style="display: none" contenteditable="true" />
+			<script src="../js/редактор.js" />
+			<style>
+				.update_journal[href=""]{
+					display: none;
+				}
+				
+				a[accesskey]:after{
+					content: "(" attr(accesskey) ")"
+				}
+			</style>
+		</span>
 	</body>
 </html>

@@ -63,7 +63,12 @@
 	<xsl:template mode="xhtml" match="*[contains(@class, 'заголовок')]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
-			<xsl:value-of select="$запись/заголовок" />
+			<xsl:if test="normalize-space($запись/заголовок)">
+				<xsl:value-of select="$запись/заголовок" />
+			</xsl:if>
+			<xsl:if test="not(normalize-space($запись/заголовок))">
+				<xsl:copy-of select="node()" />
+			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -71,8 +76,19 @@
 	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')]">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
-			<xsl:apply-templates mode="текст" select="$запись/текст/node()" />
+			<xsl:if test="normalize-space($запись/текст)">
+				<xsl:apply-templates mode="текст" select="$запись/текст/node()" />
+			</xsl:if>
+			<xsl:if test="not(normalize-space($запись/текст))">
+				<xsl:apply-templates mode="xhtml" select="node()" />
+			</xsl:if>
 		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')]//xhtml:script/@src[starts-with(., '../')]">
+		<xsl:attribute name="{name()}">
+			<xsl:value-of select="substring(., 4)" />
+		</xsl:attribute>
 	</xsl:template>
 	
 </xsl:stylesheet>
