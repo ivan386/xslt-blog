@@ -61,28 +61,16 @@
 	
 	<!-- добавляем содержимое элемента 'заголовок' если оно есть в элементы с классом 'заголовок' -->
 	<xsl:template mode="xhtml" match="*[contains(@class, 'заголовок')]">
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<xsl:if test="normalize-space($запись/заголовок)">
-				<xsl:value-of select="$запись/заголовок" />
-			</xsl:if>
-			<xsl:if test="not(normalize-space($запись/заголовок))">
-				<xsl:copy-of select="node()" />
-			</xsl:if>
-		</xsl:copy>
+		<xsl:call-template name="заголовок">
+			<xsl:with-param name="запись" select="$запись" />
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!-- добавляем содержимое элемента 'текст' если оно есть в элементы с классом 'текст' -->
 	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')]">
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<xsl:if test="normalize-space($запись/текст)">
-				<xsl:apply-templates mode="текст" select="$запись/текст/node()" />
-			</xsl:if>
-			<xsl:if test="not(normalize-space($запись/текст))">
-				<xsl:apply-templates mode="xhtml" select="node()" />
-			</xsl:if>
-		</xsl:copy>
+		<xsl:call-template name="текст">
+			<xsl:with-param name="запись" select="$запись" />
+		</xsl:call-template>
 	</xsl:template>
 	
 	<xsl:template mode="xhtml" match="*[contains(@class, 'текст')]//xhtml:script/@src[starts-with(., '../')]">

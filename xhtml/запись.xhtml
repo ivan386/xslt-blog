@@ -24,22 +24,7 @@
 	<body>
 		<!-- надеюсь по именам классов понятно что будет в этих элементах -->
 		<ul   class="навигация" />
-		<h1   class="заголовок" ><input id="title" placeholder="Введите заголовок новой записи" style="font: inherit; width: 100%;"/></h1>
-		<span class="текст" ><label><input accesskey="t" class="тест" type="checkbox" onclick="test_text()" />предпросмотр(t)</label> <a accesskey="s" onclick="save_xml()" oncontextmenu="save_xml()" href="#">сохранить запись</a> <a accesskey="j" class="update_journal" href="" download="журнал.xml">обновить журнал</a> 
-<textarea
-	placeholder="Введите текст новой записи."
-	style="font: inherit; width: 100%; height: 100vh"
-></textarea><span class="тест" style="display: none" contenteditable="true" />
-			<script src="../js/редактор.js" />
-			<style>
-				.update_journal[href=""]{
-					display: none;
-				}
-				
-				a[accesskey]:after{
-					content: "(" attr(accesskey) ")"
-				}
-			</style>
-		</span>
+		<h1   class="заголовок" />
+		<span class="текст" ><script src="../js/редактор.js" /></span>
 	</body>
 </html>

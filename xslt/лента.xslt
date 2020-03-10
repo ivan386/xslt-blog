@@ -44,32 +44,35 @@
 	</xsl:template>
 	
 	<xsl:template mode="xhtml" match="*[contains(@class, 'записи')]">
+		<xsl:variable name="контейнер-заголовка" select="*[contains(@class, 'заголовок')]" />
+		<xsl:variable name="контейнер-текста" select="*[contains(@class, 'текст')]" />
 		<xsl:copy>
 			<xsl:copy-of select="@*" />
-			<xsl:apply-templates mode="записи" select="$журнал/запись" />
+			<xsl:for-each select="$журнал/запись">
+				<xsl:variable name="id" select="normalize-space(.)" />
+				<xsl:variable name="xml">
+					<xsl:if test="@xml">
+						<xsl:value-of select="@xml"/>
+					</xsl:if>
+					<xsl:if test="not(@xml)">
+						<xsl:value-of select="."/>
+					</xsl:if>
+				</xsl:variable>
+				<xsl:variable name="запись" select="document(concat('../', $xml, '.xml'))/запись" />
+				<xsl:if test="normalize-space($запись)">
+					<xsl:for-each select="$контейнер-заголовка">
+						<xsl:call-template name="заголовок">
+							<xsl:with-param name="id" select="$id" />
+							<xsl:with-param name="запись" select="$запись" />
+						</xsl:call-template>
+					</xsl:for-each>
+					<xsl:for-each select="$контейнер-текста">
+						<xsl:call-template name="текст">
+							<xsl:with-param name="запись" select="$запись" />
+						</xsl:call-template>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:for-each>
 		</xsl:copy>
 	</xsl:template>
-
-	<xsl:template mode="записи" match="запись">
-		<xsl:variable name="id" select="." />
-		<xsl:variable name="запись" select="document(concat('../', ., '.xml'))/запись" />
-		<xsl:for-each select="$xhtml//*[contains(@class, 'заголовок')][normalize-space($запись/заголовок)]">
-			<xsl:copy>
-				<xsl:copy-of select="@*" />
-				<xsl:attribute name="id">
-					<xsl:value-of select="$id" />
-				</xsl:attribute>
-				<a href="{$id}.xml">
-					<xsl:copy-of select="$запись/заголовок/node()" />
-				</a>
-			</xsl:copy>
-		</xsl:for-each>
-		<xsl:for-each select="$xhtml//*[contains(@class, 'текст')][normalize-space($запись/текст)]">
-			<xsl:copy>
-				<xsl:copy-of select="@*" />
-				<xsl:apply-templates mode="текст" select="$запись/текст/node()" />
-			</xsl:copy>
-		</xsl:for-each>
-	</xsl:template>
-	
 </xsl:stylesheet>
