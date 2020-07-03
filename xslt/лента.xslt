@@ -36,7 +36,7 @@
 		<xsl:for-each select="$xhtml//*[contains(@class, 'ссылка')]">
 			<xsl:copy>
 				[<a href="#{$запись}">#</a>]
-				<a href="{$запись}.xml">
+				<a href="{$запись[@xml]/@xml | $запись[not(@xml)]}.xml">
 					<xsl:copy-of select="$запись" />
 				</a>
 			</xsl:copy>
@@ -63,6 +63,7 @@
 					<xsl:for-each select="$контейнер-заголовка">
 						<xsl:call-template name="заголовок">
 							<xsl:with-param name="id" select="$id" />
+							<xsl:with-param name="xml" select="$xml" />
 							<xsl:with-param name="запись" select="$запись" />
 						</xsl:call-template>
 					</xsl:for-each>

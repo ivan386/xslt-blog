@@ -18,7 +18,7 @@
 	<!-- делаем список ссылок на другие записи -->
 	<xsl:template mode="навигация" match="запись">
 		<li>
-			<a href="{text()}.xml">
+			<a href="{.[@xml]/@xml | .[not(@xml)]}.xml">
 				<xsl:value-of select="text()" />
 			</a>
 		</li>

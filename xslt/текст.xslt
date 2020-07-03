@@ -8,6 +8,7 @@
   	<xsl:template name="заголовок">
 		<xsl:param name="запись" />
 		<xsl:param name="id" />
+		<xsl:param name="xml" />
 		<xsl:choose>
 		
 			<!-- проверяем есть ли текст в теге заголовок -->
@@ -15,6 +16,7 @@
 				<!-- выводим содержимое тега 'заголовок' -->
 				<xsl:call-template name="вставить">
 					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="xml" select="$xml" />
 					<xsl:with-param name="узлы"
 						select="$запись/заголовок/node()" />
 				</xsl:call-template>
@@ -31,6 +33,7 @@
 				<!-- выводим все элементы после тега 'заголовок' до тега 'текст' -->
 				<xsl:call-template name="вставить">
 					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="xml" select="$xml" />
 					<xsl:with-param name="узлы"
 						select="$запись
 								/заголовок
@@ -48,6 +51,7 @@
 						[normalize-space()]">
 				<xsl:call-template name="вставить">
 					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="xml" select="$xml" />
 					<xsl:with-param name="узлы"
 						select="$запись
 								/текст
@@ -64,6 +68,7 @@
 	
 	<xsl:template name="вставить">
 		<xsl:param name="узлы" />
+		<xsl:param name="xml" />
 		<xsl:param name="id" />
 		<xsl:copy>
 			<xsl:copy-of select="@*" />
@@ -79,7 +84,7 @@
 					<xsl:attribute name="id">
 							<xsl:value-of select="$id" />
 					</xsl:attribute>
-					<a href="{$id}.xml">
+					<a href="{$xml}.xml">
 						<xsl:apply-templates mode="текст" select="$узлы" />
 					</a>
 				</xsl:when>
