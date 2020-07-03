@@ -59,6 +59,16 @@
 				</xsl:call-template>
 			</xsl:when>
 			
+			<xsl:when
+				test="  $запись//xhtml:title">
+				<xsl:call-template name="вставить">
+					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="xml" select="$xml" />
+					<xsl:with-param name="узлы"
+						select="$запись//xhtml:title/node()" />
+				</xsl:call-template>
+			</xsl:when>
+			
 			<!-- копируем исходное содержимое тега -->
 			<xsl:otherwise>
 				<xsl:copy-of select="." />
@@ -115,6 +125,14 @@
 				<!-- выводим содержимое после тега текст -->
 				<xsl:call-template name="срез">
 					<xsl:with-param name="текст" select="$запись/текст/following-sibling::node()" />
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- проверяем есть ли текст после тега title -->
+			<xsl:when test="$запись/xhtml:title/following-sibling::node()[normalize-space()]">
+				<!-- выводим содержимое после тега title -->
+				<xsl:call-template name="срез">
+					<xsl:with-param name="текст" select="$запись/xhtml:title/following-sibling::node()" />
 				</xsl:call-template>
 			</xsl:when>
 			
